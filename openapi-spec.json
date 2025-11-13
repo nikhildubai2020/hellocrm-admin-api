@@ -1,0 +1,484 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "HelloCRM Admin API",
+    "version": "1.0.0",
+    "description": "Complete API documentation for HelloCRM Admin with oRPC"
+  },
+  "servers": [
+    {"url": "http://localhost:4000/api", "description": "Development Server"}
+  ],
+  "paths": {
+    "/business.get": {
+      "post": {
+        "tags": ["Business"],
+        "summary": "Get businesses with pagination",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": {"type": "integer", "minimum": 1, "default": 1},
+                  "limit": {"type": "integer", "minimum": 1, "maximum": 100, "default": 10},
+                  "search": {"type": "string", "default": ""},
+                  "sortBy": {"type": "string", "enum": ["createdAt", "business_name"]},
+                  "sortOrder": {"type": "string", "enum": ["asc", "desc"]}
+                }
+              },
+              "example": {"page": 1, "limit": 10, "search": "tech"}
+            }
+          }
+        },
+        "responses": {"200": {"description": "Success"}}
+      }
+    },
+    "/business.create": {
+      "post": {
+        "tags": ["Business"],
+        "summary": "Create new business",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["business_name"],
+                "properties": {
+                  "business_name": {"type": "string", "minLength": 1, "maxLength": 255},
+                  "business_type": {"type": "string", "maxLength": 100},
+                  "business_gst": {"type": "string", "maxLength": 20},
+                  "address_line_1": {"type": "string", "maxLength": 255},
+                  "city": {"type": "string", "maxLength": 100},
+                  "state": {"type": "integer"},
+                  "contact_number": {"type": "string", "maxLength": 20},
+                  "email_address": {"type": "string", "format": "email", "maxLength": 100}
+                }
+              },
+              "example": {
+                "business_name": "Tech Solutions Inc",
+                "business_type": "Technology",
+                "email_address": "contact@techsolutions.com",
+                "contact_number": "+91-9876543210"
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Business created"}}
+      }
+    },
+    "/business.update": {
+      "post": {
+        "tags": ["Business"],
+        "summary": "Update business",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["business_id"],
+                "properties": {
+                  "business_id": {"type": "integer", "minimum": 1},
+                  "business_name": {"type": "string", "maxLength": 255},
+                  "business_type": {"type": "string", "maxLength": 100},
+                  "email_address": {"type": "string", "format": "email"}
+                }
+              },
+              "example": {"business_id": 1, "business_name": "Updated Tech Solutions"}
+            }
+          }
+        },
+        "responses": {"200": {"description": "Business updated"}}
+      }
+    },
+    "/business.delete": {
+      "post": {
+        "tags": ["Business"],
+        "summary": "Delete business",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["business_id"],
+                "properties": {
+                  "business_id": {"type": "integer", "minimum": 1}
+                }
+              },
+              "example": {"business_id": 1}
+            }
+          }
+        },
+        "responses": {"200": {"description": "Business deleted"}}
+      }
+    },
+    "/users.get": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Get users with pagination",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": {"type": "integer", "minimum": 1, "default": 1},
+                  "limit": {"type": "integer", "minimum": 1, "maximum": 100, "default": 10},
+                  "search": {"type": "string"},
+                  "business_id": {"type": "integer"},
+                  "status": {"type": "boolean"}
+                }
+              },
+              "example": {"page": 1, "limit": 10, "business_id": 1, "status": true}
+            }
+          }
+        },
+        "responses": {"200": {"description": "Success"}}
+      }
+    },
+    "/users.create": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Create new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["business_id", "first_name", "last_name", "mobile_1", "password", "add_by"],
+                "properties": {
+                  "business_id": {"type": "integer", "minimum": 1},
+                  "first_name": {"type": "string", "minLength": 1, "maxLength": 50},
+                  "last_name": {"type": "string", "minLength": 1, "maxLength": 50},
+                  "userName": {"type": "string", "maxLength": 50},
+                  "mobile_1": {"type": "string", "minLength": 10, "maxLength": 10},
+                  "email": {"type": "string", "format": "email", "maxLength": 50},
+                  "password": {"type": "string", "minLength": 6},
+                  "user_role": {"type": "integer"},
+                  "status": {"type": "boolean"},
+                  "add_by": {"type": "integer", "minimum": 1}
+                }
+              },
+              "example": {
+                "business_id": 1,
+                "first_name": "Jane",
+                "last_name": "Smith",
+                "mobile_1": "9876543210",
+                "email": "jane@example.com",
+                "password": "securepass123",
+                "add_by": 1
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "User created"}}
+      }
+    },
+    "/users.update": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Update user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["user_id"],
+                "properties": {
+                  "user_id": {"type": "integer", "minimum": 1},
+                  "first_name": {"type": "string", "maxLength": 50},
+                  "last_name": {"type": "string", "maxLength": 50},
+                  "email": {"type": "string", "format": "email"},
+                  "status": {"type": "boolean"}
+                }
+              },
+              "example": {"user_id": 1, "first_name": "Updated Jane", "status": true}
+            }
+          }
+        },
+        "responses": {"200": {"description": "User updated"}}
+      }
+    },
+    "/users.delete": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Delete user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["user_id"],
+                "properties": {
+                  "user_id": {"type": "integer", "minimum": 1}
+                }
+              },
+              "example": {"user_id": 1}
+            }
+          }
+        },
+        "responses": {"200": {"description": "User deleted"}}
+      }
+    },
+    "/xprojectTypes.get": {
+      "post": {
+        "tags": ["Project Types"],
+        "summary": "Get project types",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": {"type": "integer", "minimum": 1, "default": 1},
+                  "limit": {"type": "integer", "minimum": 1, "maximum": 100, "default": 10},
+                  "search": {"type": "string"},
+                  "project_type_parent_id": {"type": "integer"},
+                  "status": {"type": "boolean"}
+                }
+              },
+              "example": {"page": 1, "limit": 10, "project_type_parent_id": 0}
+            }
+          }
+        },
+        "responses": {"200": {"description": "Success"}}
+      }
+    },
+    "/xprojectTypes.create": {
+      "post": {
+        "tags": ["Project Types"],
+        "summary": "Create project type",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["project_type_name"],
+                "properties": {
+                  "project_type_name": {"type": "string", "minLength": 1, "maxLength": 50},
+                  "project_type_parent_id": {"type": "integer", "default": 0},
+                  "project_type_description": {"type": "string", "maxLength": 255},
+                  "status": {"type": "boolean", "default": true}
+                }
+              },
+              "example": {
+                "project_type_name": "Luxury Apartments",
+                "project_type_parent_id": 1,
+                "project_type_description": "High-end residential apartments"
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Project type created"}}
+      }
+    },
+    "/xProjectHighlights.get": {
+      "post": {
+        "tags": ["Project Highlights"],
+        "summary": "Get project highlights",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": {"type": "integer", "minimum": 1, "default": 1},
+                  "limit": {"type": "integer", "minimum": 1, "maximum": 100, "default": 10},
+                  "search": {"type": "string"},
+                  "status": {"type": "boolean"}
+                }
+              },
+              "example": {"page": 1, "limit": 10, "search": "pool"}
+            }
+          }
+        },
+        "responses": {"200": {"description": "Success"}}
+      }
+    },
+    "/xProjectHighlights.create": {
+      "post": {
+        "tags": ["Project Highlights"],
+        "summary": "Create project highlight",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["business_id", "project_highlight_name"],
+                "properties": {
+                  "business_id": {"type": "integer", "minimum": 1},
+                  "user_id": {"type": "integer"},
+                  "project_highlight_name": {"type": "string", "minLength": 1, "maxLength": 100},
+                  "status": {"type": "boolean", "default": true}
+                }
+              },
+              "example": {
+                "business_id": 1,
+                "user_id": 1,
+                "project_highlight_name": "Swimming Pool & Spa",
+                "status": true
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Project highlight created"}}
+      }
+    },
+    "/xProjectAuthorities.get": {
+      "post": {
+        "tags": ["Project Authorities"],
+        "summary": "Get project authorities",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": {"type": "integer", "minimum": 1, "default": 1},
+                  "limit": {"type": "integer", "minimum": 1, "maximum": 100, "default": 10},
+                  "search": {"type": "string"},
+                  "status": {"type": "boolean"}
+                }
+              },
+              "example": {"page": 1, "limit": 10, "search": "rera"}
+            }
+          }
+        },
+        "responses": {"200": {"description": "Success"}}
+      }
+    },
+    "/xProjectAuthorities.create": {
+      "post": {
+        "tags": ["Project Authorities"],
+        "summary": "Create project authority",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["project_authority_name"],
+                "properties": {
+                  "project_authority_name": {"type": "string", "minLength": 1, "maxLength": 100},
+                  "status": {"type": "boolean", "default": true}
+                }
+              },
+              "example": {
+                "project_authority_name": "RERA Maharashtra",
+                "status": true
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Project authority created"}}
+      }
+    },
+    "/xPropertiesConfigs.get": {
+      "post": {
+        "tags": ["Property Configs"],
+        "summary": "Get property configurations",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": {"type": "integer", "minimum": 1, "default": 1},
+                  "limit": {"type": "integer", "minimum": 1, "maximum": 100, "default": 10},
+                  "search": {"type": "string"},
+                  "status": {"type": "boolean"}
+                }
+              },
+              "example": {"page": 1, "limit": 10, "search": "luxury"}
+            }
+          }
+        },
+        "responses": {"200": {"description": "Success"}}
+      }
+    },
+    "/xPropertiesConfigs.create": {
+      "post": {
+        "tags": ["Property Configs"],
+        "summary": "Create property configuration",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["property_config_name", "property_config_description"],
+                "properties": {
+                  "property_config_name": {"type": "string", "minLength": 1, "maxLength": 50},
+                  "property_config_description": {"type": "string", "maxLength": 100},
+                  "status": {"type": "boolean", "default": true}
+                }
+              },
+              "example": {
+                "property_config_name": "Premium Configuration",
+                "property_config_description": "High-end property features",
+                "status": true
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Property config created"}}
+      }
+    },
+    "/xUsersRoles.get": {
+      "post": {
+        "tags": ["User Roles"],
+        "summary": "Get user roles",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": {"type": "integer", "minimum": 1, "default": 1},
+                  "limit": {"type": "integer", "minimum": 1, "maximum": 100, "default": 10}
+                }
+              },
+              "example": {"page": 1, "limit": 10}
+            }
+          }
+        },
+        "responses": {"200": {"description": "Success"}}
+      }
+    },
+    "/xUsersRoles.create": {
+      "post": {
+        "tags": ["User Roles"],
+        "summary": "Create user role",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["role_name"],
+                "properties": {
+                  "role_name": {"type": "string", "minLength": 1, "maxLength": 50},
+                  "role_description": {"type": "string", "maxLength": 255},
+                  "status": {"type": "boolean", "default": true}
+                }
+              },
+              "example": {
+                "role_name": "Sales Manager",
+                "role_description": "Manages sales team and operations",
+                "status": true
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "User role created"}}
+      }
+    }
+  }
+}

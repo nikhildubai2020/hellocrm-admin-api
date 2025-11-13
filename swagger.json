@@ -1,0 +1,320 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Admin API - HelloCRM",
+    "version": "1.0.0",
+    "description": "Complete API documentation for HelloCRM Admin API with Elysia, oRPC, Drizzle ORM & PostgreSQL"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4000",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/rpc/business/get": {
+      "post": {
+        "tags": ["Business"],
+        "summary": "Get businesses with pagination",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": {"type": "integer", "default": 1},
+                  "limit": {"type": "integer", "default": 10},
+                  "search": {"type": "string"}
+                }
+              },
+              "example": {"page": 1, "limit": 10, "search": "tech"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "business_id": 1,
+                      "business_name": "Tech Solutions Inc",
+                      "business_type": "Technology",
+                      "email_address": "contact@techsolutions.com",
+                      "createdAt": "2024-01-01T00:00:00Z"
+                    }
+                  ],
+                  "currentPage": 1,
+                  "totalPages": 5,
+                  "totalRecords": 50
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rpc/business.create": {
+      "post": {
+        "tags": ["Business"],
+        "summary": "Create new business",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["business_name"],
+                "properties": {
+                  "business_name": {"type": "string"},
+                  "business_type": {"type": "string"},
+                  "email_address": {"type": "string", "format": "email"},
+                  "contact_number": {"type": "string"},
+                  "address_line_1": {"type": "string"}
+                }
+              },
+              "example": {
+                "business_name": "New Tech Company",
+                "business_type": "Software",
+                "email_address": "info@newtech.com",
+                "contact_number": "+1234567890",
+                "address_line_1": "123 Tech Street"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Business created successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "business_id": 2,
+                  "business_name": "New Tech Company",
+                  "business_type": "Software",
+                  "createdAt": "2024-01-01T00:00:00Z"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rpc/users.get": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Get users with pagination and business info",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": {"type": "integer", "default": 1},
+                  "limit": {"type": "integer", "default": 10},
+                  "search": {"type": "string"},
+                  "business_id": {"type": "integer"},
+                  "status": {"type": "boolean"}
+                }
+              },
+              "example": {"page": 1, "limit": 10, "business_id": 1, "status": true}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "user_id": 1,
+                      "first_name": "John",
+                      "last_name": "Doe",
+                      "email": "john@example.com",
+                      "mobile_1": "1234567890",
+                      "business_name": "Tech Solutions Inc",
+                      "status": true,
+                      "createdAt": "2024-01-01T00:00:00Z"
+                    }
+                  ],
+                  "currentPage": 1,
+                  "totalPages": 3,
+                  "totalRecords": 25
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rpc/users.create": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Create new user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["business_id", "first_name", "last_name", "mobile_1", "password", "add_by"],
+                "properties": {
+                  "business_id": {"type": "integer"},
+                  "first_name": {"type": "string"},
+                  "last_name": {"type": "string"},
+                  "mobile_1": {"type": "string"},
+                  "email": {"type": "string", "format": "email"},
+                  "password": {"type": "string"},
+                  "add_by": {"type": "integer"}
+                }
+              },
+              "example": {
+                "business_id": 1,
+                "first_name": "Jane",
+                "last_name": "Smith",
+                "mobile_1": "9876543210",
+                "email": "jane@example.com",
+                "password": "securepassword",
+                "add_by": 1
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User created successfully"
+          }
+        }
+      }
+    },
+    "/rpc/xprojectTypes.get": {
+      "post": {
+        "tags": ["Project Types"],
+        "summary": "Get project types with parent relationships",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": {"type": "integer", "default": 1},
+                  "limit": {"type": "integer", "default": 10},
+                  "search": {"type": "string"},
+                  "project_type_parent_id": {"type": "integer"},
+                  "status": {"type": "boolean"}
+                }
+              },
+              "example": {"page": 1, "limit": 10, "project_type_parent_id": 0}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "project_type_id": 1,
+                      "project_type_name": "Residential",
+                      "project_type_parent_id": 0,
+                      "project_type_description": "Residential projects",
+                      "parent_project_type_name": "Root",
+                      "status": true,
+                      "createdAt": "2024-01-01T00:00:00Z"
+                    }
+                  ],
+                  "currentPage": 1,
+                  "totalPages": 2,
+                  "totalRecords": 15
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rpc/xProjectHighlights.get": {
+      "post": {
+        "tags": ["Project Highlights"],
+        "summary": "Get project highlights",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": {"type": "integer", "default": 1},
+                  "limit": {"type": "integer", "default": 10},
+                  "search": {"type": "string"},
+                  "status": {"type": "boolean"}
+                }
+              },
+              "example": {"page": 1, "limit": 10, "status": true}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "project_highlight_id": 1,
+                      "project_highlight_name": "Swimming Pool",
+                      "user_id": 1,
+                      "business_id": 1,
+                      "status": true,
+                      "createdAt": "2024-01-01T00:00:00Z"
+                    }
+                  ],
+                  "currentPage": 1,
+                  "totalPages": 1,
+                  "totalRecords": 8
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rpc/xProjectHighlights.create": {
+      "post": {
+        "tags": ["Project Highlights"],
+        "summary": "Create project highlight",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["business_id", "project_highlight_name"],
+                "properties": {
+                  "business_id": {"type": "integer"},
+                  "project_highlight_name": {"type": "string"},
+                  "user_id": {"type": "integer"},
+                  "status": {"type": "boolean"}
+                }
+              },
+              "example": {
+                "business_id": 1,
+                "project_highlight_name": "Gym & Fitness Center",
+                "user_id": 1,
+                "status": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Project highlight created successfully"
+          }
+        }
+      }
+    }
+  }
+}

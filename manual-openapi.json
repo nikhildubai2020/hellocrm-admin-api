@@ -1,0 +1,263 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "HelloCRM Admin API",
+    "version": "1.0.0",
+    "description": "Complete API documentation for HelloCRM Admin with oRPC"
+  },
+  "servers": [
+    {"url": "http://localhost:4000/rpc", "description": "Development Server"}
+  ],
+  "paths": {
+    "/business.get": {
+      "post": {
+        "tags": ["Business"],
+        "summary": "Get businesses with pagination",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": {"type": "integer", "minimum": 1, "default": 1},
+                  "limit": {"type": "integer", "minimum": 1, "maximum": 100, "default": 10},
+                  "search": {"type": "string", "default": ""},
+                  "sortBy": {"type": "string", "enum": ["createdAt", "business_name"], "default": "createdAt"},
+                  "sortOrder": {"type": "string", "enum": ["asc", "desc"], "default": "desc"}
+                }
+              },
+              "example": {
+                "page": 1,
+                "limit": 10,
+                "search": "tech",
+                "sortBy": "business_name",
+                "sortOrder": "asc"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "business_id": {"type": "integer"},
+                          "business_name": {"type": "string"},
+                          "business_type": {"type": "string"},
+                          "email_address": {"type": "string"},
+                          "createdAt": {"type": "string"}
+                        }
+                      }
+                    },
+                    "currentPage": {"type": "integer"},
+                    "totalPages": {"type": "integer"},
+                    "totalRecords": {"type": "integer"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/business.create": {
+      "post": {
+        "tags": ["Business"],
+        "summary": "Create new business",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["business_name"],
+                "properties": {
+                  "business_name": {"type": "string", "minLength": 1, "maxLength": 255},
+                  "business_type": {"type": "string", "maxLength": 100},
+                  "business_gst": {"type": "string", "maxLength": 20},
+                  "address_line_1": {"type": "string", "maxLength": 255},
+                  "city": {"type": "string", "maxLength": 100},
+                  "state": {"type": "integer"},
+                  "contact_number": {"type": "string", "maxLength": 20},
+                  "email_address": {"type": "string", "format": "email", "maxLength": 100}
+                }
+              },
+              "example": {
+                "business_name": "Tech Solutions Inc",
+                "business_type": "Technology",
+                "business_gst": "GST123456789",
+                "address_line_1": "123 Tech Street",
+                "city": "Mumbai",
+                "state": 1,
+                "contact_number": "+91-9876543210",
+                "email_address": "contact@techsolutions.com"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Business created successfully"
+          }
+        }
+      }
+    },
+    "/users.get": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Get users with pagination",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": {"type": "integer", "minimum": 1, "default": 1},
+                  "limit": {"type": "integer", "minimum": 1, "maximum": 100, "default": 10},
+                  "search": {"type": "string", "default": ""},
+                  "business_id": {"type": "integer"},
+                  "status": {"type": "boolean"}
+                }
+              },
+              "example": {
+                "page": 1,
+                "limit": 10,
+                "search": "john",
+                "business_id": 1,
+                "status": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/users.create": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Create new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["business_id", "first_name", "last_name", "mobile_1", "password", "add_by"],
+                "properties": {
+                  "business_id": {"type": "integer", "minimum": 1},
+                  "first_name": {"type": "string", "minLength": 1, "maxLength": 50},
+                  "last_name": {"type": "string", "minLength": 1, "maxLength": 50},
+                  "userName": {"type": "string", "maxLength": 50},
+                  "mobile_1": {"type": "string", "minLength": 10, "maxLength": 10},
+                  "email": {"type": "string", "format": "email", "maxLength": 50},
+                  "password": {"type": "string", "minLength": 6},
+                  "user_role": {"type": "integer"},
+                  "status": {"type": "boolean"},
+                  "add_by": {"type": "integer", "minimum": 1}
+                }
+              },
+              "example": {
+                "business_id": 1,
+                "first_name": "Jane",
+                "last_name": "Smith",
+                "userName": "janesmith",
+                "mobile_1": "9876543210",
+                "email": "jane@example.com",
+                "password": "securepassword123",
+                "user_role": 2,
+                "status": true,
+                "add_by": 1
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User created successfully"
+          }
+        }
+      }
+    },
+    "/xProjectHighlights.get": {
+      "post": {
+        "tags": ["Project Highlights"],
+        "summary": "Get project highlights",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": {"type": "integer", "minimum": 1, "default": 1},
+                  "limit": {"type": "integer", "minimum": 1, "maximum": 100, "default": 10},
+                  "search": {"type": "string", "default": ""},
+                  "status": {"type": "boolean"}
+                }
+              },
+              "example": {
+                "page": 1,
+                "limit": 10,
+                "search": "pool",
+                "status": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/xProjectHighlights.create": {
+      "post": {
+        "tags": ["Project Highlights"],
+        "summary": "Create project highlight",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["business_id", "project_highlight_name"],
+                "properties": {
+                  "business_id": {"type": "integer", "minimum": 1},
+                  "user_id": {"type": "integer"},
+                  "project_highlight_name": {"type": "string", "minLength": 1, "maxLength": 100},
+                  "status": {"type": "boolean", "default": true}
+                }
+              },
+              "example": {
+                "business_id": 1,
+                "user_id": 1,
+                "project_highlight_name": "Swimming Pool & Spa",
+                "status": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Project highlight created successfully"
+          }
+        }
+      }
+    }
+  }
+}

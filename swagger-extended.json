@@ -1,0 +1,247 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "HelloCRM Admin API - Extended Documentation",
+    "version": "1.0.0",
+    "description": "Complete API documentation with all CRUD operations"
+  },
+  "servers": [{"url": "http://localhost:3000"}],
+  "paths": {
+    "/rpc/xAddCities.get": {
+      "post": {
+        "tags": ["Cities"],
+        "summary": "Get cities",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {"page": 1, "limit": 10, "search": "Mumbai"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [{"city_id": 1, "city_name": "Mumbai", "state_id": 1, "status": true}],
+                  "currentPage": 1, "totalPages": 5, "totalRecords": 50
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rpc/xAddCities.create": {
+      "post": {
+        "tags": ["Cities"],
+        "summary": "Create city",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {"city_name": "Delhi", "state_id": 2, "status": true}
+            }
+          }
+        }
+      }
+    },
+    "/rpc/xAmenities.get": {
+      "post": {
+        "tags": ["Amenities"],
+        "summary": "Get amenities",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {"page": 1, "limit": 10, "search": "pool"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [{"amenity_id": 1, "amenity_name": "Swimming Pool", "amenity_type_id": 1, "status": true}],
+                  "currentPage": 1, "totalPages": 3, "totalRecords": 25
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rpc/xProjectAuthorities.get": {
+      "post": {
+        "tags": ["Project Authorities"],
+        "summary": "Get project authorities",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {"page": 1, "limit": 10, "status": true}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [{"project_authority_id": 1, "project_authority_name": "RERA", "status": true}],
+                  "currentPage": 1, "totalPages": 2, "totalRecords": 15
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rpc/xProjectBuildingTypes.get": {
+      "post": {
+        "tags": ["Project Building Types"],
+        "summary": "Get project building types",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {"page": 1, "limit": 10, "search": "apartment"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [{"project_building_type_id": 1, "project_building_type_name": "Apartment", "status": true}],
+                  "currentPage": 1, "totalPages": 1, "totalRecords": 8
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rpc/xPropertiesConfigs.get": {
+      "post": {
+        "tags": ["Property Configs"],
+        "summary": "Get property configurations",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {"page": 1, "limit": 10, "status": true}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [{"property_config_id": 1, "property_config_name": "Luxury Config", "property_config_description": "High-end properties", "status": true}],
+                  "currentPage": 1, "totalPages": 2, "totalRecords": 12
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rpc/xLeadsSource.get": {
+      "post": {
+        "tags": ["Leads Source"],
+        "summary": "Get lead sources",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {"page": 1, "limit": 10, "search": "website"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [{"lead_source_id": 1, "source_name": "Website", "status": true}],
+                  "currentPage": 1, "totalPages": 1, "totalRecords": 6
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rpc/xSettings.get": {
+      "post": {
+        "tags": ["Settings"],
+        "summary": "Get system settings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {"page": 1, "limit": 10, "search": "email"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [{"setting_id": 1, "setting_key": "email_notifications", "setting_value": "true", "status": true}],
+                  "currentPage": 1, "totalPages": 1, "totalRecords": 10
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PaginationRequest": {
+        "type": "object",
+        "properties": {
+          "page": {"type": "integer", "default": 1, "minimum": 1},
+          "limit": {"type": "integer", "default": 10, "minimum": 1, "maximum": 100},
+          "search": {"type": "string"},
+          "sortBy": {"type": "string"},
+          "sortOrder": {"type": "string", "enum": ["asc", "desc"]}
+        }
+      },
+      "PaginationResponse": {
+        "type": "object",
+        "properties": {
+          "data": {"type": "array"},
+          "currentPage": {"type": "integer"},
+          "totalPages": {"type": "integer"},
+          "totalRecords": {"type": "integer"}
+        }
+      },
+      "Business": {
+        "type": "object",
+        "properties": {
+          "business_id": {"type": "integer"},
+          "business_name": {"type": "string"},
+          "business_type": {"type": "string"},
+          "email_address": {"type": "string"},
+          "contact_number": {"type": "string"},
+          "createdAt": {"type": "string", "format": "date-time"}
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "user_id": {"type": "integer"},
+          "business_id": {"type": "integer"},
+          "first_name": {"type": "string"},
+          "last_name": {"type": "string"},
+          "email": {"type": "string"},
+          "mobile_1": {"type": "string"},
+          "status": {"type": "boolean"},
+          "business_name": {"type": "string"},
+          "createdAt": {"type": "string", "format": "date-time"}
+        }
+      }
+    }
+  }
+}
